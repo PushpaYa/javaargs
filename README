@@ -1,23 +1,33 @@
 This is the java version of the Args program described in: http://butunclebob.com/ArticleS.UncleBob.CleanCodeArgs
 
+
+---------------------Following parts are updated-----------------------
+package com.cleancoder.args;
+
 public class ArgsMain {
+	
   public static void main(String[] args) {
-    try {
-      Args arg = new Args("l,p#,d*", args);
-      boolean logging = arg.getBoolean('l');
-      int port = arg.getInt('p');
-      String directory = arg.getString('d');
-      executeApplication(logging, port, directory);
-    } catch (ArgsException e) {
-      System.out.printf("Argument error: %s\n", e.errorMessage());
-    }
+	  if(args[0].equals("-h")) {
+	  helpFunction();
+	  return;
+	  }
+  
+	try {
+	  Args arg = new Args("f,p#,s*,n#,a##,d[*]", args);
+	  arg.getAllParameters();
+	} catch (ArgsException e) {
+	  System.out.printf("Argument error: %s\n", e.errorMessage());
+	}
   }
 
-  private static void executeApplication(boolean logging, int port, String directory) {
-    System.out.printf("logging is %s, port:%d, directory:%s\n",logging, port, directory);
+  //Function to print the help content
+  private static void helpFunction() {
+	  System.out.printf("Following are the options : \n");
+	  System.out.printf("Schema: \n - char    - Boolean arg.\n - char*   - String arg.\n - char#   - Integer arg.\n - char##  - double arg.\n - char[*] - one element of a string array.\n\n");
+	  System.out.printf("Example schema: (f,p#,s*,n#,a##,d[*])\n\n");
+	  System.out.printf("Corresponding command line: -f -s Bob -n 1 -a 3.2 -p 22 -d /home/users/\n"); 
   }
 }
-
 Schema:
  - char    - Boolean arg.
  - char*   - String arg.
@@ -25,6 +35,18 @@ Schema:
  - char##  - double arg.
  - char[*] - one element of a string array.
 
-Example schema: (f,s*,n#,a##,p[*])
-Coresponding command line: "-f -s Bob -n 1 -a 3.2 -p e1 -p e2 -p e3
+Example schema: (f,p#,s*,n#,a##,d[*])
+Corresponding command line: "-f -s Bob -n 1 -a 3.2 -p 22 -d /home/users/
 
+Code documentation updated
+
+Edited the main to add the schema for what all arguments types.
+Added help function and can be used by -h option when running the program.
+
+For Boolean type
+-Doesnt need a value(you just have to specify the argument name)
+-Only flag is enough to change to true
+
+Added double and string array code for parsing
+
+String array and map updated to take the value as argument
